@@ -46,10 +46,17 @@ async function handleRequest(request) {
     const response = new Response(
       JSON.stringify({ ip: request.headers.get("x-real-ip") })
     );
-
+    const { name, quote } = JSON.parse(request.body);
+    const latestExpires = new Date(
+      new Date().getTime() + 60 * 60 * 1000 * 24
+    ).toGMTString();
     response.headers.append(
       "set-cookie",
-      `<cookie-name>=<cookie-value>; Expires=<date>`
+      `name=${name}; Expires=${latestExpires}`
+    );
+    response.headers.append(
+      "set-cookie",
+      `quote=${quote}; Expires=${latestExpires}`
     );
 
     return response;
